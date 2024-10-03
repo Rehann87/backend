@@ -1,0 +1,298 @@
+{
+	"info": {
+		"_postman_id": "28c5d841-9d66-42ab-921c-5e6059d79e6d",
+		"name": "home expense manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36624149"
+	},
+	"item": [
+		{
+			"name": "src",
+			"item": [
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "register admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"home@gmail.com\",\r\n    \"password\": \"7878\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/admin/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"admin",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "login admin",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmRjMmYwNmU3OTllNWJmNDE5MjU2YTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MjU3MDU5OTAsImV4cCI6MTcyNTcwOTU5MH0.92C_kFgBply1WtyFLf7n32msj7k-q2mTpnDcTESLcmM",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"laku@gmail.com\",\r\n    \"password\":\"78\",\r\n    \"adminCode\": \"ADMIN1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3003/admin/login/66dc2f06e799e5bf419256a7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3003",
+									"path": [
+										"admin",
+										"login",
+										"66dc2f06e799e5bf419256a7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "http://localhost:3003/admin/register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"xz@gmail.com\",\r\n    \"password\": \"1234\",\r\n    \"adminCode\": \"ADMIN1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3003/admin/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3003",
+									"path": [
+										"admin",
+										"register"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "transaction",
+					"item": [
+						{
+							"name": "addTrans",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"amount\": 8745000,\r\n    \"type\":\"expense\",\r\n    \"remark\":\"mall\",\r\n    \"date\": \"8-10-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/transaction/add-transaction",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"transaction",
+										"add-transaction"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getTrans",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/transaction/get-transaction",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"transaction",
+										"get-transaction"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateTrans",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"amount\": 87450,\r\n    \"type\":\"expense\",\r\n    \"remark\":\"mall\",\r\n    \"date\": \"1-10-28\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/transaction/update-transaction/66f3e2fe67a17df9ea7ce000",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"transaction",
+										"update-transaction",
+										"66f3e2fe67a17df9ea7ce000"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteTrans",
+							"request": {
+								"method": "DELETE",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Category",
+					"item": [
+						{
+							"name": "AddCategory",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"categoryName\" : \"Guava\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/category/add-category",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"category",
+										"add-category"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getCategory",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateCategory",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"categoryName\" : \"crar\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/category/update-category/66fa90beb1eb3c0386742083",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"category",
+										"update-category",
+										"66fa90beb1eb3c0386742083"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteCat",
+							"request": {
+								"method": "DELETE",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
