@@ -47,6 +47,35 @@ categoryController.getAllCategories = async (req, res) => {
     }
 }
 
+//get single category
+categoryController.getSingleCategory = async (req, res) => {
+    try {
+        const { Id } = req.params;
+
+        const getSingleData = await categoryService.getSingleCategory(Id);
+        console.log(getSingleData, 'getsouu')
+        if (!getSingleData) {
+            return res.send({
+                status: false,
+                msg: "No data found",
+                data: null,
+            });
+        } else {
+            return res.send({
+                status: true,
+                msg: "Category retrived sucessfully",
+                data: getSingleData,
+            });
+        }
+    } catch (error) {
+        return res.send({
+            status: false,
+            msg: "Something went wrong",
+            data: null,
+        });
+    }
+};
+
 //update category
 categoryController.updateCategory = async (req, res) => {
 
