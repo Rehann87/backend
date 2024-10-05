@@ -12,6 +12,17 @@ categoryService.findByCategoryName = async (categoryName) =>{
     return await Category.findOne(categoryName)
 }
 
+//get single category
+categoryService.getSingleCategory = async (Id,updateData) =>{
+return await Category.findOneAndUpdate(
+    { _id: Id, isDeleted: { $ne: true } },
+    updateData,
+    {
+      new: true,
+    }
+  );
+};
+
 // Get Category by ID
 categoryService.getCategoryById = async (id) => {
     return await Category.findById(id);
