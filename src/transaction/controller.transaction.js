@@ -9,27 +9,43 @@ const validTransactionTypes = ["income", "expense"]
 //Add the transaction
 transactionController.addTransaction = async (req, res) => {
   const { amount, type, date, remark } = req.body;
-  if(type == '' || date == '' ){
-    return res.send({status:false, msg:"Type, date is required", data:null})
+
+  //required type and date !
+  if (type == '' || date == '') {
+    return res.send({ status: false, msg: "Type, date is required", data: null })
   }
-  if(amount == undefined || amount == ''){
+
+  //required amount !
+  if (amount == undefined || amount == '') {
     return res.send({ status: false, msg: "Amount is required.", data: null })
   }
+
+  //invalid amount check !
   if (amount <= 0) {
     return res.send({ status: false, msg: "invalid amount value", data: null })
   }
+
+  //invalid transaction check !
   if (!validTransactionTypes.includes(type)) {
     return res.send({ status: false, msg: "invalid transaction type", data: null })
   }
 
-  try {
-    const newTransaction = await transactionService.addTransaction({ amount, type, date, remark })
-    return res.send({ status: true, msg: "Transaction Created Successfully", data: newTransaction })
+  // Transaction servicess
+  const transaction = await transactionService.findByTransactionByAmount({ amount })
 
-  } catch (err) {
-    console.log(err)
-    return res.send({ status: false, msg: "something went wrong", data: null })
+  // Check if the category already exists
+  if (transaction) {
+    res.send({ status: false, msg: "Transaction already exist", data: null })
+  } else {
+    try {
+      const newTransaction = await transactionService.addTransaction({ amount, type, date, remark })
 
+      return res.send({ status: true, msg: "Transaction Created Successfully", data: newTransaction })
+
+    } catch (err) {
+      console.log(err)
+      return res.send({ status: false, msg: "something went wrong", data: null })
+    }
   }
 }
 
@@ -54,10 +70,10 @@ transactionController.updatedTransaction = async (req, res) => {
   const { transactionId } = req.params
   const updateData = req.body;
   const { amount, type, date, remark } = req.body;
-  if(type == '' || date == '' ){
-    return res.send({status:false, msg:"Type, date is required", data:null})
+  if (type == '' || date == '') {
+    return res.send({ status: false, msg: "Type, date is required", data: null })
   }
-  if(amount == undefined || amount == ''){
+  if (amount == undefined || amount == '') {
     return res.send({ status: false, msg: "Amount is required.", data: null })
   }
   if (amount <= 0) {
@@ -69,32 +85,32 @@ transactionController.updatedTransaction = async (req, res) => {
   }
 
   const transaction = await transactionService.getTransactionById(transactionId);
-  if(transaction){
+  if (transaction) {
     try {
       const updateTransaction = await transactionService.updatedTransaction(transactionId, updateData);
       res.status(200).json({
-        status:true,
+        status: true,
         message: "Transaction updated successfully",
         data: updateTransaction
       })
     } catch (err) {
       console.log(err)
     }
-  }else{
+  } else {
     return res.send({ status: false, msg: "Invalid Transaction", data: null })
   }
 
 }
 
 //delete  Transaction
-transactionController.deletedTransaction = async(req, res) =>{
-  const {transactionId} = req.params;
+transactionController.deletedTransaction = async (req, res) => {
+  const { transactionId } = req.params;
   try {
     const deleteTransaction = await transactionService.deletedTransaction(transactionId, {
       $set: { isDeleted: true },
     });
     res.status(200).json({
-      status:true,
+      status: true,
       message: "Transaction deleted successfully",
       data: null
     })
