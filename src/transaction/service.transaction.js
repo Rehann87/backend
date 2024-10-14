@@ -12,6 +12,11 @@ transactionService.addTransaction = async ({ amount, type, remark, date }) => {
   }
 };
 
+//findByTransactionByAmount
+transactionService.findByTransactionByAmount = async (amount) => {
+  return await modelTransaction.findOne(amount)
+}
+
 // Get transaction by amount
 transactionService.getTransactionByAmount = async (amount) => {
   return await modelTransaction.findOne({ amount });
@@ -32,7 +37,7 @@ transactionService.updatedTransaction = async (transactionId, updateData) => {
   if (!transactionId) {
     throw new Error('Transaction ID is required');
   }
-  
+
   return await modelTransaction.findByIdAndUpdate(transactionId, updateData, { new: true });
 };
 
