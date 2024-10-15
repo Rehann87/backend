@@ -64,6 +64,36 @@ transactionController.getAllTransaction = async (req, res) => {
   }
 }
 
+//get single transaction
+transactionController.getSingleTransaction = async (req, res) => {
+  try {
+    const { transactionId } = req.params;
+
+    const getSingleData = await transactionService.getSingleTransaction(transactionId);
+    console.log(getSingleData, 'getsingleTransaction')
+    if (!getSingleData) {
+      return res.send({
+        status: false,
+        msg: "No data found",
+        data: null,
+      });
+    }
+    else {
+      return res.send({
+        status: true,
+        msg: "Transaction received sucessfully",
+        data: getSingleData,
+      });
+    }
+  } catch (error) {
+    return res.send({
+      status: false,
+      msg: "Something went wrong",
+      data: null,
+    });
+  }
+}
+
 
 //Update Transaction
 transactionController.updatedTransaction = async (req, res) => {
