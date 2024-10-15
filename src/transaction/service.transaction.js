@@ -32,6 +32,36 @@ transactionService.getAllTransaction = async () => {
   return await modelTransaction.find({ isDeleted: { $ne: true } });
 };
 
+//get Single transaction
+transactionController.getSingleTransaction = async (req, res) => {
+  try {
+    const { transactionId } = req.params;
+
+    const getSingleData = await transactionService.getSingleTransaction(transactionId);
+    console.log(getSingleData, 'getsingleTransaction')
+    if (!getSingleData) {
+      return res.send({
+        status: false,
+        msg: "No data found",
+        data: null,
+      });
+    }
+    else {
+      return res.send({
+        status: true,
+        msg: "Transaction received sucessfully",
+        data: getSingleData,
+      });
+    }
+  } catch (error) {
+    return res.send({
+      status: false,
+      msg: "Something went wrong",
+      data: null,
+    });
+  }
+}
+
 // Update transaction
 transactionService.updatedTransaction = async (transactionId, updateData) => {
   if (!transactionId) {
