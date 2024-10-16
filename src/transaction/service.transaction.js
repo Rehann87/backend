@@ -33,7 +33,7 @@ transactionService.getAllTransaction = async () => {
 };
 
 //get Single transaction
-transactionController.getSingleTransaction = async (req, res) => {
+transactionService.getSingleTransaction = async (req, res) => {
   try {
     const { transactionId } = req.params;
 
