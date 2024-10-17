@@ -3,9 +3,9 @@ const modelTransaction = require('./model.transaction');
 const transactionService = {};
 
 // Add transaction
-transactionService.addTransaction = async ({ amount, type, remark, date }) => {
+transactionService.addTransaction = async ({ categoryId, amount, type, remark, date }) => {
   try {
-    const newTransaction = await modelTransaction.create({ amount, type, remark, date });
+    const newTransaction = (await modelTransaction.create({ categoryId, amount, type, remark, date }))
     return { status: true, data: newTransaction };
   } catch (err) {
     return { status: false, data: null, error: err };
@@ -32,35 +32,16 @@ transactionService.getAllTransaction = async () => {
   return await modelTransaction.find({ isDeleted: { $ne: true } });
 };
 
-//get Single transaction
-transactionService.getSingleTransaction = async (req, res) => {
-  try {
-    const { transactionId } = req.params;
-
-    const getSingleData = await transactionService.getSingleTransaction(transactionId);
-    console.log(getSingleData, 'getsingleTransaction')
-    if (!getSingleData) {
-      return res.send({
-        status: false,
-        msg: "No data found",
-        data: null,
-      });
+//get single category
+transactionService.getSingleTransaction = async (transactionId, updateData) => {
+  return await modelTransaction.findOneAndUpdate(
+    { _id: transactionId, isDeleted: { $ne: true } },
+    updateData,
+    {
+      new: true,
     }
-    else {
-      return res.send({
-        status: true,
-        msg: "Transaction received sucessfully",
-        data: getSingleData,
-      });
-    }
-  } catch (error) {
-    return res.send({
-      status: false,
-      msg: "Something went wrong",
-      data: null,
-    });
-  }
-}
+  );
+};
 
 // Update transaction
 transactionService.updatedTransaction = async (transactionId, updateData) => {
