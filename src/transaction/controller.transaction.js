@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const transactionService = require('./service.transaction');
+const modelTransaction = require('./model.transaction');
 
 
 const transactionController = {};
@@ -8,11 +9,11 @@ const validTransactionTypes = ["income", "expense"]
 
 //Add the transaction
 transactionController.addTransaction = async (req, res) => {
-  const { amount, type, date, remark } = req.body;
+  const { categoryId, amount, type, date, remark } = req.body;
 
   //required type and date !
-  if (type == '' || date == '') {
-    return res.send({ status: false, msg: "Type, date is required", data: null })
+  if (categoryId == '' || type == '' || date == '') {
+    return res.send({ status: false, msg: "categoryId ,Type, date is required", data: null })
   }
 
   //required amount !
@@ -38,7 +39,7 @@ transactionController.addTransaction = async (req, res) => {
     res.send({ status: false, msg: "Transaction already exist", data: null })
   } else {
     try {
-      const newTransaction = await transactionService.addTransaction({ amount, type, date, remark })
+      const newTransaction = await transactionService.addTransaction({ categoryId, amount, type, date, remark })
 
       return res.send({ status: true, msg: "Transaction Created Successfully", data: newTransaction })
 
@@ -93,7 +94,6 @@ transactionController.getSingleTransaction = async (req, res) => {
     });
   }
 }
-
 
 //Update Transaction
 transactionController.updatedTransaction = async (req, res) => {
