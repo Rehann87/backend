@@ -173,6 +173,38 @@
 							"response": []
 						},
 						{
+							"name": "getSingleTransaction",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/transaction/get-transaction",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"transaction",
+										"get-transaction"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "updateTrans",
 							"request": {
 								"method": "PATCH",
@@ -222,7 +254,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"categoryName\" : \"Guava\"\r\n}",
+									"raw": "{\r\n    \"categoryName\" : \"earphonee\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -230,12 +262,11 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/category/add-category",
+									"raw": "http://localhost3000/category/add-category",
 									"protocol": "http",
 									"host": [
-										"localhost"
+										"localhost3000"
 									],
-									"port": "3000",
 									"path": [
 										"category",
 										"add-category"
@@ -287,6 +318,27 @@
 							"request": {
 								"method": "DELETE",
 								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "SingleCategory",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/category/get-singlecategory/67010a3c2955f809079d2e3a",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"category",
+										"get-singlecategory",
+										"67010a3c2955f809079d2e3a"
+									]
+								}
 							},
 							"response": []
 						}
