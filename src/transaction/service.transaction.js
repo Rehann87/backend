@@ -3,14 +3,9 @@ const modelTransaction = require('./model.transaction');
 const transactionService = {};
 
 // Add transaction
-const transactionData = await transactionService.addTransaction({
-      amount,
-      date,
-      type,
-      remark,
-      userId: req?._id, // Assuming user ID is stored in request
-      categoryId, // Store categoryId for reference
-});
+transactionService.addTransaction = async ({ categoryId, amount, type, remark, date }) => {
+  return await modelTransaction.create({categoryId, amount, type, remark, date})
+};
 
 //findByTransactionByAmount
 transactionService.findByTransactionByAmount = async (amount) => {
