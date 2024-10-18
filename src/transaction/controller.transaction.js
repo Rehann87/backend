@@ -9,46 +9,81 @@ const validTransactionTypes = ["income", "expense"]
 
 //Add the transaction
 transactionController.addTransaction = async (req, res) => {
-  const { categoryId, amount, type, date, remark } = req.body;
+  try {
+    // Destructure request body
+    const { amount, date, type, remark, categoryId } = req.body;
 
-  //required type and date !
-  if (categoryId == '' || type == '' || date == '') {
-    return res.send({ status: false, msg: "categoryId ,Type, date is required", data: null })
-  }
-
-  //required amount !
-  if (amount == undefined || amount == '') {
-    return res.send({ status: false, msg: "Amount is required.", data: null })
-  }
-
-  //invalid amount check !
-  if (amount <= 0) {
-    return res.send({ status: false, msg: "invalid amount value", data: null })
-  }
-
-  //invalid transaction check !
-  if (!validTransactionTypes.includes(type)) {
-    return res.send({ status: false, msg: "invalid transaction type", data: null })
-  }
-
-  // Transaction servicess
-  const transaction = await transactionService.findByTransactionByAmount({ amount })
-
-  // Check if the category already exists
-  if (transaction) {
-    res.send({ status: false, msg: "Transaction already exist", data: null })
-  } else {
-    try {
-      const newTransaction = await transactionService.addTransaction({ categoryId, amount, type, date, remark })
-
-      return res.send({ status: true, msg: "Transaction Created Successfully", data: newTransaction })
-
-    } catch (err) {
-      console.log(err)
-      return res.send({ status: false, msg: "something went wrong", data: null })
+    // Validate required fields
+    if (!type || !date) {
+      return res.send({
+        status: false,
+        msg: "Type and date are required",
+        data: null,
+      });
     }
+
+    if (amount === undefined || amount === '' || amount <= 0) {
+      return res.send({
+        status: false,
+        msg: "Valid amount is required",
+        data: null,
+      });
+    }
+
+    // Validate transaction type
+    const validTransactionTypes = ["expense", "income"]; // Define the valid transaction types
+    if (!validTransactionTypes.includes(type)) {
+      return res.send({
+        status: false,
+        msg: "Invalid transaction type",
+        data: null,
+      });
+    }
+
+    // Fetch category data based on categoryId
+    const CategoriesData = await categoryService.getCategoryById(categoryId);
+    if (!CategoriesData) {
+      return res.send({
+        status: false,
+        msg: "Invalid category",
+        data: null,
+      });
+    }
+
+    const categoryName = CategoriesData?.categoryName;
+
+    // Create transaction data
+    const transactionData = await transactionService.addTransaction({
+      amount,
+      date,
+      type,
+      remark,
+      userId: req?._id, // Assuming user ID is stored in request
+      categoryId, // Store categoryId for reference
+    });
+
+    // Prepare response data
+    const responseData = {
+      ...transactionData.toObject(), // Convert Mongoose document to plain JS object
+      categoryName: {
+        name: categoryName, // The fetched category name
+      },
+    };
+
+    return res.send({
+      status: "OK",
+      msg: "Transaction created successfully",
+      data: responseData,
+    });
+  } catch (error) {
+    console.log(error, "errorerror");
+    return res.send({
+      status: "Error",
+      msg: "Something went wrong",
+      data: null,
+    });
   }
-}
+};
 
 //get All the transactions
 transactionController.getAllTransaction = async (req, res) => {
