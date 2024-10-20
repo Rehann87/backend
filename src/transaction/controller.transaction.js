@@ -10,25 +10,16 @@ const validTransactionTypes = ["income", "expense"]
 //Add the transaction
 transactionController.addTransaction = async (req, res) => {
   try {
-    // Destructure request body
-    const { amount, date, type, remark, categoryId } = req.body;
-
-    // Validate required fields
-    if (!type || !date) {
-      return res.send({
-        status: false,
-        msg: "Type and date are required",
-        data: null,
-      });
-    }
-
-    if (amount === undefined || amount === '' || amount <= 0) {
-      return res.send({
-        status: false,
-        msg: "Valid amount is required",
-        data: null,
-      });
-    }
+    const {
+      amount,
+      date,
+      type,
+      categoryId,
+      remark,
+    } = req.body;
+    const CategoriesData = await categoryService.getCategoryById(
+      categoryId
+    );
 
     // Validate transaction type
     const validTransactionTypes = ["expense", "income"]; // Define the valid transaction types
@@ -39,40 +30,31 @@ transactionController.addTransaction = async (req, res) => {
         data: null,
       });
     }
-
-    // Fetch category data based on categoryId
-    const CategoriesData = await categoryService.getCategoryById(categoryId);
-    if (!CategoriesData) {
-      return res.send({
-        status: false,
-        msg: "Invalid category",
-        data: null,
-      });
-    }
-
+    
     const categoryName = CategoriesData?.categoryName;
+    // console.log(categoryName,"categoryName")
 
-    // Create transaction data
     const transactionData = await transactionService.addTransaction({
       amount,
       date,
       type,
+      categoryId,
       remark,
-      userId: req?._id, // Assuming user ID is stored in request
-      categoryId, // Store categoryId for reference
+      userId: req?._id,
     });
+    console.log(transactionData)
 
-    // Prepare response data
     const responseData = {
-      ...transactionData.toObject(), // Convert Mongoose document to plain JS object
-      categoryName: {
+      ...transactionData.toObject(),
+     CategoriesData: {
+        _id: categoryId, // The original expenseCategory ID
         name: categoryName, // The fetched category name
       },
     };
 
     return res.send({
       status: "OK",
-      msg: "Transaction created successfully",
+      msg: "Amount, date, type and remark is created successfully",
       data: responseData,
     });
   } catch (error) {
@@ -88,17 +70,37 @@ transactionController.addTransaction = async (req, res) => {
 //get All the transactions
 transactionController.getAllTransaction = async (req, res) => {
   try {
-    const getTransaction = await transactionService.getAllTransaction()
-    console.log(getTransaction, "Working")
-    if (getTransaction.length) {
-      return res.send({ status: true, data: getTransaction, error: null })
-    } else {
-      return res.send({ status: false, data: null, error: err })
-    }
-  } catch (err) {
-    res.send({ status: false, data: null, error: err })
+    // Fetch all transactions from the service
+    const transactions = await transactionService.getAllTransaction();
+    
+    // Log retrieved transactions for debugging
+    console.log(transactions, "Transactions retrieved");
+
+    // Map through each transaction and update the structure
+    const transactionsWithDetails = transactions.map((transaction) => ({
+     
+      ...transaction.toObject(), // Convert Mongoose object to plain object if needed
+      categoryId: transaction.categoryId?.categoryName || "Unknown", // Replace ID with category name or default to "Unknown"
+    }));
+    // console.log(transactionsWithDetails[0],"trtatattatta")
+    // Return response with successfully retrieved transactions
+    return res.send({
+      status: "OK",
+      msg: "Transactions retrieved successfully",
+      length: transactionsWithDetails.length,
+      data: transactionsWithDetails,
+    });
+  } catch (error) {
+    console.error("Error fetching transactions:", error); // Log the error for debugging
+
+    // Return response in case of an error
+    return res.status(500).send({
+      status: "Error",
+      msg: "Something went wrong",
+      data: null,
+    });
   }
-}
+};
 
 //get single transaction
 transactionController.getSingleTransaction = async (req, res) => {
