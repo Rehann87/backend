@@ -3,8 +3,24 @@ const modelTransaction = require('./model.transaction');
 const transactionService = {};
 
 // Add transaction
-transactionService.addTransaction = async ({ categoryId, amount, type, remark, date }) => {
-  return await modelTransaction.create({categoryId, amount, type, remark, date})
+transactionService.addTransaction = async ({
+  amount,
+  date,
+  type,
+  account,
+  categoryId,
+  necessary,
+  remark,
+  userId,
+}) => {
+  return await modelTransaction.create({
+    amount,
+    date,
+    type,
+    account,
+    categoryId,
+    remark,
+  });
 };
 
 //findByTransactionByAmount
@@ -24,7 +40,17 @@ transactionService.getTransactionById = async (id) => {
 
 // Get all transactions
 transactionService.getAllTransaction = async () => {
-  return await modelTransaction.find({ isDeleted: { $ne: true } });
+  try {
+    // Fetch transactions where isDeleted is not true, and populate categoryId with only CategoryName field
+    const transactions = await modelTransaction.find({ isDeleted: { $ne: true } })
+      .populate("categoryId", "categoryName");
+
+    // Return the transactions
+    return transactions;
+  } catch (error) {
+    console.error("Error fetching transactions from DB:", error); // Log the error for debugging
+    throw new Error("Unable to retrieve transactions"); // Throw a meaningful error
+  }
 };
 
 //get single category
