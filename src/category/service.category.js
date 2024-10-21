@@ -1,5 +1,4 @@
 const Category = require('./model.category');
-const { trace } = require('./routes.category');
 const categoryService = {};
 
 //add Category
